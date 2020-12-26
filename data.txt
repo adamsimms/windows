@@ -1,0 +1,1 @@
+{'station_name': 'DOGIS_20200904', 'time': '2020-09-04T23:18:41Z', 'wind_dir_avg': 200.0, 'wind_spd_gust_dir': 205.0, 'wind_spd_avg': 8.91, 'wind_spd_gust': 13.37}
