@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-import numpy as np
 import random
 import requests
 from bs4 import BeautifulSoup
@@ -62,7 +61,16 @@ try:
             sleep_time = main_sleep_time
         
         # DEFINING THE FLIGHT PATH OF THE MOTOR IN AN ARRAY FROM HERE TO THERE
-        x_range = np.arange(min(prev_x, x), max(prev_x, x), step_val)
+        import decimal
+
+        def float_range(start, stop, step):          
+            val_list = [start]
+            while val_list[-1] < stop:
+                val_list.append(val_list[-1]+step)
+            return val_list
+    
+    
+        x_range = float_range(int(min(prev_x, x)), int(max(prev_x, x)), step_val)
         if x > 0:
             # MOVE THE MOTOR
             for val in (x_range if x>prev_x else reversed(x_range)):
