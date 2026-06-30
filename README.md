@@ -1,6 +1,19 @@
 # windows
 
-Raspberry Pi servo controller driven by live weather data from SmartAtlantic.
+Raspberry Pi servo controller driven by live weather data from [SmartAtlantic](https://www.smartatlantic.ca/).
+
+## Quick start
+
+On the Pi, after cloning or pulling this repo:
+
+```bash
+cd ~/windows
+chmod +x setup.sh start.sh
+./setup.sh
+./start.sh
+```
+
+See [docs/SETUP.md](docs/SETUP.md) for full setup, upgrade, and troubleshooting instructions.
 
 ## Requirements
 
@@ -8,35 +21,20 @@ Raspberry Pi servo controller driven by live weather data from SmartAtlantic.
 - Python 3.10 or newer
 - Raspberry Pi OS Bookworm (or another distro with Python 3.10+)
 
-## Setup on the Pi
+## Project layout
 
-Install Python 3.11 if your system Python is older than 3.10:
-
-```bash
-sudo apt update
-sudo apt install python3.11 python3.11-venv python3-pip
-```
-
-Clone the repo, create a fresh virtual environment, and install dependencies:
-
-```bash
-git pull
-cd ~/windows
-chmod +x setup.sh start.sh
-./setup.sh
-```
-
-Run the controller:
-
-```bash
-./start.sh
-```
-
-If you previously used the old Python 3.7 virtual environment, `setup.sh` removes it and recreates `venv/` with a supported Python version.
+| File | Purpose |
+|------|---------|
+| `main.py` | Reads weather data and drives the servo via GPIO |
+| `weather_data.py` | Fetches weather from SmartAtlantic and writes `data.txt` |
+| `setup.sh` | Creates a Python 3.10+ virtualenv and installs dependencies |
+| `start.sh` | Activates the virtualenv and runs `main.py` |
+| `requirements.txt` | Pinned Python dependencies |
+| `Dockerfile` | Container image for Pi deployments |
 
 ## Docker
 
-Build for the Pi (64-bit OS):
+Build for 64-bit Raspberry Pi OS:
 
 ```bash
 docker build --platform linux/arm64 -t windows .
@@ -48,12 +46,16 @@ Build for 32-bit Raspberry Pi OS:
 docker build --platform linux/arm/v7 -t windows .
 ```
 
-GPIO access requires running the container in privileged mode or passing the GPIO device:
+GPIO access requires privileged mode or passing the GPIO device:
 
 ```bash
 docker run --rm --privileged windows
 ```
 
-## Weather data
+## Dependencies
 
-`weather_data.py` fetches data in the background and writes it to `data.txt`. `main.py` reads that file to drive the servo.
+Security-sensitive HTTP libraries (`requests`, `urllib3`, `certifi`, `idna`) are pinned to current releases and require Python 3.10+. Run `./setup.sh` after pulling dependency updates to refresh your local `venv/`.
+
+## Upgrading from Python 3.7
+
+This repo previously committed a Python 3.7 `venv/`. That has been removed. After pulling the latest `main`, run `./setup.sh` to recreate the environment with a supported Python version.

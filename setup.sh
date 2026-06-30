@@ -32,3 +32,4 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "Setup complete. Run ./start.sh to start."
+echo "See docs/SETUP.md for troubleshooting and optional systemd setup."
