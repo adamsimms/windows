@@ -26,6 +26,9 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # CPython minor tags (3.14 to 3.15) are language upgrades. RPi.GPIO must be verified first.
+      - dependency-name: "python"
+        update-types: ["version-update:semver-minor"]
     groups:
       docker-base-images:
         patterns:
